@@ -1,13 +1,52 @@
 use ego_tree::NodeRef;
-use scraper::{node::Node, Html};
+use scraper::{Html, node::Node};
 
 /// Block-level tags that should introduce a newline in the text output.
 const BLOCK_TAGS: &[&str] = &[
-    "address", "article", "aside", "blockquote", "br", "caption",
-    "dd", "details", "dialog", "div", "dl", "dt", "fieldset", "figcaption", "figure",
-    "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hr", "legend",
-    "li", "main", "menu", "nav", "ol", "p", "pre", "section", "summary", "table",
-    "tbody", "td", "tfoot", "th", "thead", "title", "tr", "ul",
+    "address",
+    "article",
+    "aside",
+    "blockquote",
+    "br",
+    "caption",
+    "dd",
+    "details",
+    "dialog",
+    "div",
+    "dl",
+    "dt",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "form",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "header",
+    "hr",
+    "legend",
+    "li",
+    "main",
+    "menu",
+    "nav",
+    "ol",
+    "p",
+    "pre",
+    "section",
+    "summary",
+    "table",
+    "tbody",
+    "td",
+    "tfoot",
+    "th",
+    "thead",
+    "title",
+    "tr",
+    "ul",
 ];
 
 /// Tags whose subtree should be skipped.
@@ -97,7 +136,8 @@ mod tests {
 
     #[test]
     fn test_skips_scripts() {
-        let html = "<html><head><script>var x = 1;</script></head><body><p>visible</p></body></html>";
+        let html =
+            "<html><head><script>var x = 1;</script></head><body><p>visible</p></body></html>";
         let lines = extract_text(html);
         assert!(lines.iter().all(|l| !l.contains("var x")));
         assert!(lines.iter().any(|l| l.contains("visible")));
@@ -111,4 +151,3 @@ mod tests {
         assert_eq!(non_blank.len(), 3);
     }
 }
-

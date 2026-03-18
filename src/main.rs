@@ -99,8 +99,14 @@ fn main() {
         args.files.insert(0, PathBuf::from(old_pattern));
     }
 
-    let before_ctx = args.context.unwrap_or(0).max(args.before_context.unwrap_or(0));
-    let after_ctx = args.context.unwrap_or(0).max(args.after_context.unwrap_or(0));
+    let before_ctx = args
+        .context
+        .unwrap_or(0)
+        .max(args.before_context.unwrap_or(0));
+    let after_ctx = args
+        .context
+        .unwrap_or(0)
+        .max(args.after_context.unwrap_or(0));
 
     let regex = build_regex(&args);
 
@@ -121,7 +127,9 @@ fn main() {
         let mut content = String::new();
         io::stdin().lock().read_to_string(&mut content).unwrap_or(0);
         let lines = html::extract_text(&content);
-        let matched = search_lines(&lines, &regex, &args, before_ctx, after_ctx, None, false, &stdout);
+        let matched = search_lines(
+            &lines, &regex, &args, before_ctx, after_ctx, None, false, &stdout,
+        );
         std::process::exit(if matched > 0 { 0 } else { 1 });
     }
 
@@ -145,7 +153,9 @@ fn main() {
         };
         let lines = html::extract_text(&content);
 
-        let show_filename = !args.count && !args.files_with_matches && !args.files_without_matches
+        let show_filename = !args.count
+            && !args.files_with_matches
+            && !args.files_without_matches
             && (args.with_filename || (multi && !args.no_filename));
 
         let n = search_lines(
@@ -224,7 +234,9 @@ fn search_lines(
         .collect();
 
     for &m in &matched {
-        if m { match_count += 1; }
+        if m {
+            match_count += 1;
+        }
     }
 
     if args.count || args.files_with_matches || args.files_without_matches {
@@ -237,7 +249,9 @@ fn search_lines(
     let mut need_sep = false;
 
     for (i, &is_matched) in matched.iter().enumerate() {
-        if !is_matched { continue; }
+        if !is_matched {
+            continue;
+        }
         let start = i.saturating_sub(before_ctx);
         let end = (i + after_ctx + 1).min(lines.len());
 
@@ -250,7 +264,9 @@ fn search_lines(
                 to_print.push((j, matched[j]));
             }
         }
-        if end > prev_end { prev_end = end; }
+        if end > prev_end {
+            prev_end = end;
+        }
         need_sep = true;
     }
 
