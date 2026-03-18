@@ -64,7 +64,7 @@ fn walk_node(node: NodeRef<Node>, buf: &mut String, in_skip: bool) {
     match node.value() {
         Node::Text(text) => {
             if !in_skip {
-                buf.push_str(&text);
+                buf.push_str(text);
             }
         }
         Node::Element(el) => {

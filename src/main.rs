@@ -169,9 +169,7 @@ fn main() {
             &stdout,
         );
 
-        if args.files_with_matches && n > 0 {
-            println!("{}", path.display());
-        } else if args.files_without_matches && n == 0 {
+        if (args.files_with_matches && n > 0) || (args.files_without_matches && n == 0) {
             println!("{}", path.display());
         } else if args.count {
             let prefix = if args.with_filename || (multi && !args.no_filename) {
@@ -213,6 +211,7 @@ fn build_regex(args: &Args) -> Regex {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn search_lines(
     lines: &[String],
     regex: &Regex,
@@ -259,6 +258,8 @@ fn search_lines(
         if has_context && need_sep && start > prev_end {
             to_print.push((usize::MAX, false)); // separator
         }
+        //reads cleaner than the more idiomatic iterator
+        #[allow(clippy::needless_range_loop)]
         for j in start..end {
             if j >= prev_end {
                 to_print.push((j, matched[j]));
@@ -330,10 +331,10 @@ fn collect_files(paths: &[PathBuf], recursive: bool, extensions: &[&str]) -> Vec
                     .filter(|e| e.file_type().is_file())
                 {
                     let p = entry.path();
-                    if let Some(ext) = p.extension().and_then(|e| e.to_str()) {
-                        if extensions.iter().any(|&x| x.eq_ignore_ascii_case(ext)) {
-                            files.push(p.to_path_buf());
-                        }
+                    if let Some(ext) = p.extension().and_then(|e| e.to_str())
+                        && extensions.iter().any(|&x| x.eq_ignore_ascii_case(ext))
+                    {
+                        files.push(p.to_path_buf());
                     }
                 }
             } else {
