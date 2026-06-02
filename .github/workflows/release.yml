@@ -39,11 +39,11 @@ jobs:
 
       - name: Archive (Unix)
         if: runner.os != 'Windows'
-        run: tar czf ${{ matrix.archive }} -C target/${{ matrix.target }}/release wayback-scraper
+        run: tar czf ${{ matrix.archive }} -C target/${{ matrix.target }}/release hgrep
 
       - name: Archive (Windows)
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path target/${{ matrix.target }}/release/wayback-scraper.exe -DestinationPath ${{ matrix.archive }}
+        run: Compress-Archive -Path target/${{ matrix.target }}/release/hgrep.exe -DestinationPath ${{ matrix.archive }}
 
       - uses: actions/upload-artifact@v4
         with:
